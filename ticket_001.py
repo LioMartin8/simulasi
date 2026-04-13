@@ -1,36 +1,35 @@
 import docker
 import mlflow
 
-# setup MLflow
+# setup mlflow
 mlflow.set_tracking_uri("sqlite:///mlflow.db")
-mlflow.set_experiment("simulasi kerja")
-
+mlflow.set_experiment("simulasi_kerja *ulang")
 
 # setup docker
 client = docker.from_env()
-all_containers = client.containers.list(all=True)
-running_containers = client.containers.list()
+all_container = client.containers.list(all=True)
+running = client.containers.list()
 
-# Cetak ringkasan dulu
-print(f"Total running: {len(running_containers)}")
-print(f"Total semua (termasuk mati): {len(all_containers)}")
-
-# Baru cetak detail SEMUA container (pakai all_containers)
-for container in all_containers:
-    # ambil tag dengan aman
+for container in all_container:
     tags = container.image.tags
-    image_name = tags[0] if tags else "<no tag>"
-
+    image_name = tags[0] if tags else "<no tags>"
     print("=" * 40)
-    print(f"Name   : {container.name}")
-    print(f"Status : {container.status}")
-    print(f"Image  : {image_name}")
+    print(f"Name Container    :{container.name}")
+    print(f"Status Container  :{container.status}")
+    print(f"Image Container   :{image_name}")
     print("=" * 40)
 
-hitung = float(len(all_containers))
-coba = len(running_containers)
+# tampilkan ringkasan
+print("*" * 40)
+print("Total semua container", len(all_container))
+print("Total Running container", len(running))
+print("*" * 40)
 
+# catat di mlflow
+total_running = len(running)
+total_container = len(all_container)
 with mlflow.start_run():
-    mlflow.log_metric("Total conntainer yang berjalan", coba)
-    mlflow.log_metric("Total data container running dan exited", hitung)
-    print(f"Data tercatat di MLflow: total={hitung}, running={coba}")
+    mlflow.log_metric("Total container yang berjalan: ", total_running)
+    mlflow.log_metric("Total semua container running dan exited: ", total_container)
+
+    print(f"tercatat: running={total_running}, total={total_container}")
