@@ -1,54 +1,36 @@
 import docker
 import mlflow
 
+# setup MLflow
 mlflow.set_tracking_uri("sqlite:///mlflow.db")
-mlflow.set_experiment("simulasi-kerja")
+mlflow.set_experiment("simulasi kerja")
 
+
+# setup docker
 client = docker.from_env()
-containers = client.containers.list()
-all_container = client.containers.list(all=True)
+all_containers = client.containers.list(all=True)
+running_containers = client.containers.list()
 
-if len(containers) == 0:
-    print("=" * 40)
-    print("Tidak ada container yang sedang berjalan")
-    print("=" * 40)
-    for container in all_container:
-        tagss = container.image.tags
-        if tagss:
-            print(f"Image     :{container.image.tags[0]}")
-        else:
-            print("image     :<no tag>")
-            print("=" * 40)
-            print("Semua yang sedang berjalan dan yang exited")
-            print("=" * 40)
-            print(f"Name      :{container.name}")
-            print(f"Status    :{container.status}")
-            print(tagss)
-            print("=" * 40)
+# Cetak ringkasan dulu
+print(f"Total running: {len(running_containers)}")
+print(f"Total semua (termasuk mati): {len(all_containers)}")
 
-else:
-    total = len(containers)
+# Baru cetak detail SEMUA container (pakai all_containers)
+for container in all_containers:
+    # ambil tag dengan aman
+    tags = container.image.tags
+    image_name = tags[0] if tags else "<no tag>"
+
     print("=" * 40)
-    print(f"Total Container yang sedang berjalan:    {total}")
+    print(f"Name   : {container.name}")
+    print(f"Status : {container.status}")
+    print(f"Image  : {image_name}")
     print("=" * 40)
-    for container in containers:
-        tagss = container.image.tags
-        if tagss:
-            print(f"Image     :{container.image.tags[0]}")
-        else:
-            print("image     :<no tag>")
-            print("=" * 40)
-            print("Container yang sedang berjalan")
-            print("=" * 40)
-            print(f"Name      :{container.name}")
-            print(f"Status    :{container.status}")
-            print(tagss)
-            print("=" * 40)
-    for container in all_container:
-        print("=" * 40)
-        print("Semua yang sedang berjalan dan yang exited")
-        print("=" * 40)
-        print(f"Name      :{container.name}")
-        print(f"Status    :{container.status}")
-        print(tagss)
-        print("=" * 40)
+
+hitung = float(len(all_containers))
+coba = len(running_containers)
+
+with mlflow.start_run():
+    mlflow.log_metric("Total conntainer yang berjalan", coba)
+    mlflow.log_metric("Total data container running dan exited", hitung)
+    print(f"Data tercatat di MLflow: total={hitung}, running={coba}")
