@@ -8,6 +8,9 @@ mlflow.set_experiment("simulasi day 2")
 # setup docker
 client = docker.from_env()
 all_container = client.containers.list(all=True)
+exited_container = [
+    container for container in all_container if container.status == "exited"
+]
 
 with mlflow.start_run():
     for container in all_container:
@@ -22,5 +25,5 @@ with mlflow.start_run():
             print(f"Satus        :{container.status}")
             print(f"Log container:{log_container.decode()}")
             print("=" * 40)
-        else:
-            print("tidak ada container yang exited")
+    if len(exited_container) == 0:
+        print("tidak ada container yang exited")
