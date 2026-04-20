@@ -1,0 +1,5 @@
+2026/04/10 03:02:33 [notice] 1#1: signal 17 (SIGCHLD) received from 34
+2026/04/10 03:02:33 [notice] 1#1: worker process 34 exited with code 0
+2026/04/10 03:02:33 [notice] 1#1: signal 17 (SIGCHLD) received from 39
+2026/04/10 03:02:33 [notice] 1#1: worker process 39 exited with code 0
+2026/04/10 03:02:33 [notice] 1#1: exit

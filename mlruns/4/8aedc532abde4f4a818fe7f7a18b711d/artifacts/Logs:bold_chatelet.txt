@@ -1,0 +1,5 @@
+2026/04/01 04:33:51 [notice] 1#1: signal 29 (SIGIO) received
+2026/04/01 04:33:51 [notice] 1#1: signal 17 (SIGCHLD) received from 45
+2026/04/01 04:33:51 [notice] 1#1: worker process 41 exited with code 0
+2026/04/01 04:33:51 [notice] 1#1: worker process 45 exited with code 0
+2026/04/01 04:33:51 [notice] 1#1: exit
