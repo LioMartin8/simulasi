@@ -1,8 +1,6 @@
 import time
-
 import docker
 import mlflow
-import notify2
 
 # set mlflow
 mlflow.set_tracking_uri("sqlite:///mlflow.db")
@@ -13,13 +11,9 @@ client = docker.from_env()
 all_container = client.containers.list(all=True)
 status_sebelumnya = {}
 
-# set notify2
-notify2.init("Aplikasi Python")
-
 while True:
     all_container = client.containers.list(all=True)
     for container in all_container:
-        notify = notify2.Notification("MONITOR CONTAINER", "container crash!!")
         exit_code = container.attrs["State"]["ExitCode"]
         print("=" * 40)
         print("Data Container")
@@ -31,7 +25,7 @@ while True:
                 status_sebelumnya[container.name] == "running"
                 and container.status == "exited"
             ):
-                notify.show()
+                print("CRASH DETECTED!!")
                 nama_container = container.name
                 print(f"Exit Code  :{exit_code}")
 
